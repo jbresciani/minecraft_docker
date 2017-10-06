@@ -6,9 +6,8 @@ ARG MINECRAFT_URL
 ARG MINECRAFT_VERSION
 
 # Default to UTF-8 file.encoding
-ENV LANG C.UTF-8
-
-ENV HOSTNAME=localhost \
+ENV LANG=C.UTF-8 \
+    HOSTNAME=localhost \
     MINECRAFT_VERSION=${MINECRAFT_VERSION} \
     MINECRAFT_VERSION=${MINECRAFT_URL} \
     JAVA_HOME=/usr/lib/jvm/java-1.8-openjdk/jre \
@@ -17,25 +16,25 @@ ENV HOSTNAME=localhost \
     JAVA_ALPINE_VERSION=8.131.11-r2
 
 RUN set -x; \
-	  apk add --no-cache openjdk8-jre="${JAVA_ALPINE_VERSION}"; \
-  	mkdir -p /home/minecraft/server/logs; \
-    echo eula=true > /home/minecraft/server/eula.txt
+    apk add --no-cache openjdk8-jre="${JAVA_ALPINE_VERSION}"; \
+    mkdir -p /home/minecraft/server/logs; \
+    adduser -D -h /home/minecraft -s /bin/sh minecraft; \
+    chown -R minecraft /home/minecraft
+
+USER minecraft
+
+WORKDIR /home/minecraft/server
 
 RUN set -x; \
+    echo eula=true > eula.txt; \
+    pwd; \
+    whoami; \
     while [ 1 ]; do \
-        wget -q -c -T 15 ${MINECRAFT_URL} -O /home/minecraft/server/minecraft_server.jar; \
-        if [ $? = 0 ]; then break; fi; \
-        sleep 1s; \
-    done;
-RUN { \
-      echo '#!/bin/sh'; \
-      echo 'set -e'; \
-      echo; \
-      echo 'cd /home/minecraft/server/'; \
-      echo '/usr/bin/java -Xmx2G -Xms2G -jar /home/minecraft/server/minecraft_server.jar nogui'; \
-    } > /home/minecraft/server/minecraft-start.sh; \
-    chmod +x /home/minecraft/server/minecraft-start.sh
+      wget -c -T 15 ${MINECRAFT_URL} -O ./minecraft_server.jar; \
+      if [ $? = 0 ]; then break; fi; \
+      sleep 1; \
+    done
 
-CMD ["/bin/sh", "/home/minecraft/server/minecraft-start.sh"]
+CMD ["/usr/bin/java -Xmx2G -Xms2G -jar /home/minecraft/server/minecraft_server.jar nogui"]
 
 EXPOSE 25565

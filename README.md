@@ -1,10 +1,5 @@
 Minecraft
 ===
-Downloading the container from gcr
----
-```
-gcloud docker -- pull gcr.io/xmatters-eng-mgmt/rabbitmq-server:3.6.12
-```
 
 Building the container
 ---
