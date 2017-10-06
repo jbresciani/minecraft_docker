@@ -33,8 +33,11 @@ RUN set -x; \
       wget -c -T 15 ${MINECRAFT_URL} -O ./minecraft_server.jar; \
       if [ $? = 0 ]; then break; fi; \
       sleep 1; \
-    done
+    done; \
+    echo '/usr/bin/java -Xmx2048m -Xms2048m -jar /home/minecraft/server/minecraft_server.jar nogui 1>> logs/minecraft.out 2>> logs/minecraft.err' > ./minecraft-start.sh; \
+    chmod +x ./minecraft-start.sh
 
-CMD ["/usr/bin/java -Xmx2G -Xms2G -jar /home/minecraft/server/minecraft_server.jar nogui"]
+CMD ["/bin/sh", "./minecraft-start.sh"]
+
 
 EXPOSE 25565
