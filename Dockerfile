@@ -1,4 +1,4 @@
-# A rabbitmq server
+# A minecraft server
 FROM alpine:3.6
 MAINTAINER Jacob Bresciani version: 0.9
 

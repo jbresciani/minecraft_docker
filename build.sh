@@ -1,6 +1,4 @@
 #!/bin/bash
-# env vars starting RABBITMQ_ are reserved for rabbit control and if set without
-# though may change the rabbitmq server behaviour
 while getopts "v:" opts; do
   case ${opts} in
     v) VERSION=${OPTARG} ;;
