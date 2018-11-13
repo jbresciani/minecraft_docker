@@ -1,9 +1,13 @@
 #!/bin/bash
+set -x
+
+MINECRAFT_VERSION=1.13.2
+
 while getopts "v:" opts; do
   case ${opts} in
-    v) VERSION=${OPTARG} ;;
+    v) MINECRAFT_VERSION=${OPTARG} ;;
     \?)
-      echo "build.sh -v <minecraft version> # -v defaults to '3.6.12-1.el7'" >&2
+      echo "build.sh -v <minecraft version to install>" >&2
       exit 1
     ;;
     :)
@@ -13,14 +17,10 @@ while getopts "v:" opts; do
   esac
 done
 
-if [ -z $VERSION ]; then
-  MINECRAFT_VERSION="1.12.2"
-else
-  MINECRAFT_VERSION="${VERSION}"
-fi
-MINECRAFT_URL="http://s3.amazonaws.com/Minecraft.Download/versions/${MINECRAFT_VERSION}/minecraft_server.${MINECRAFT_VERSION}.jar"
+MINECRAFT_VERSION=${MINECRAFT_VERSION} ./get_mc_jar.py
 
 docker build . \
-  -t minecraft-server:${MINECRAFT_VERSION} \
-  --build-arg MINECRAFT_VERSION=${MINECRAFT_VERSION} \
-  --build-arg MINECRAFT_URL=${MINECRAFT_URL}
+       --build-arg MINECRAFT_VERSION=${MINECRAFT_VERSION} \
+       -t jbresciani/minecraft:${MINECRAFT_VERSION}
+
+docker push jbresciani/minecraft:${MINECRAFT_VERSION}

@@ -1,43 +1,53 @@
 # A minecraft server
-FROM alpine:3.6
-MAINTAINER Jacob Bresciani version: 0.9
+FROM openjdk:jre
 
-ARG MINECRAFT_URL
-ARG MINECRAFT_VERSION
+LABEL MAINTAINER Jacob Bresciani \
+      VERSION: 1.0
+
+ARG MINECRAFT_VERSION=${MINECRAFT_VERSION}
 
 # Default to UTF-8 file.encoding
-ENV LANG=C.UTF-8 \
-    HOSTNAME=localhost \
-    MINECRAFT_VERSION=${MINECRAFT_VERSION} \
-    MINECRAFT_VERSION=${MINECRAFT_URL} \
-    JAVA_HOME=/usr/lib/jvm/java-1.8-openjdk/jre \
+ENV ACCEPT_EULA=false \
+    JAVA_OPTS="-Xmx2048m -Xms512m" \
+    LANG=C.UTF-8 \
+    MINECRAFT_HOME=/opt/minecraft \
+    MINECRAFT_LOGS=/opt/minecraft/logs \
+    MINECRAFT_VERSION="${MINECRAFT_VERSION}" \
     PATH=$PATH:/usr/lib/jvm/java-1.8-openjdk/jre/bin:/usr/lib/jvm/java-1.8-openjdk/bin \
-    JAVA_VERSION=8u131 \
-    JAVA_ALPINE_VERSION=8.131.11-r2
+    ALLOW-FLIGHT=false \
+    DIFFICULTY=1 \
+    GAMEMODE=0 \
+    GENERATE-STRUCTURES=true \
+    HARDCORE=false \
+    LEVEL-SEED= \
+    LEVEL-TYPE=DEFAULT \
+    MAX-PLAYERS=20 \
+    MOTD="A Minecraft Server" \
+    PVP=true \
+    SPAWN-ANIMALS=true \
+    SPAWN-MONSTERS=true \
+    SPAWN-NPCS=true \
+    SPAWN-PROTECTION=16
+
+COPY files/entrypoint.sh /
+COPY files/minecraft_server.jar /opt/minecraft/minecraft_server.jar
 
 RUN set -x; \
-    apk add --no-cache openjdk8-jre="${JAVA_ALPINE_VERSION}"; \
-    mkdir -p /home/minecraft/server/logs; \
-    adduser -D -h /home/minecraft -s /bin/sh minecraft; \
-    chown -R minecraft /home/minecraft
+    chmod +x /entrypoint.sh; \
+    adduser --home ${MINECRAFT_HOME} \
+            --shell /bin/sh \
+            --disabled-password \
+            -c "Minecraft Server User" \
+            minecraft; \
+    chown -R minecraft ${MINECRAFT_HOME}
 
 USER minecraft
 
-WORKDIR /home/minecraft/server
+WORKDIR ${MINECRAFT_HOME}
 
-RUN set -x; \
-    echo eula=true > eula.txt; \
-    pwd; \
-    whoami; \
-    while [ 1 ]; do \
-      wget -c -T 15 ${MINECRAFT_URL} -O ./minecraft_server.jar; \
-      if [ $? = 0 ]; then break; fi; \
-      sleep 1; \
-    done; \
-    echo '/usr/bin/java -Xmx2048m -Xms2048m -jar /home/minecraft/server/minecraft_server.jar nogui 1>> logs/minecraft.out 2>> logs/minecraft.err' > ./minecraft-start.sh; \
-    chmod +x ./minecraft-start.sh
+CMD ["/bin/sh"]
 
-CMD ["/bin/sh", "./minecraft-start.sh"]
+ENTRYPOINT ["/entrypoint.sh"]
 
 
 EXPOSE 25565

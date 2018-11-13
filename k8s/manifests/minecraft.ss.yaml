@@ -1,0 +1,142 @@
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: minecraft
+  namespace: minecraft-jacob
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: minecraft
+      clusterid: jacob
+  serviceName: minecraft-jacob
+  template:
+    metadata:
+      labels:
+        app: minecraft
+        clusterid: jacob
+    spec:
+      containers:
+        - name: minecraft
+          image: minecraft-server:1
+          env:
+          - name: ALLOW-FLIGHT
+            value: "false"
+          - name: DIFFICULTY
+            value: "1"
+            # 0 - Peaceful
+            # 1 - Easy
+            # 2 - Normal
+            # 3 - Hard
+          - name: GAMEMODE
+            value: "0"
+            # 0 - Survival
+            # 1 - Creative
+            # 2 - Adventure
+            # 3 - Spectator
+          - name: GENERATE-STRUCTURES
+            value: "true"
+          - name: HARDCORE
+            value: "false"
+          # - name: LEVEL-SEED
+          #   value: 
+          - name: LEVEL-TYPE
+            value: DEFAULT
+            # DEFAULT - Standard world with hills, valleys, water, etc.
+            # FLAT - A flat world with no features, can be modified with generator-settings.
+            # LARGEBIOMES - Same as default but all biomes are larger.
+            # AMPLIFIED - Same as default but world-generation height limit is increased.
+            # BUFFET - Same as default unless generator-settings is set to a preset.
+          - name: MAX-PLAYERS
+            value: "20"
+          - name: MOTD
+            value: "A Minecraft Server"
+          - name: PVP
+            value: "true"
+          - name: SPAWN-ANIMALS
+            value: "true"
+          - name: SPAWN-MONSTERS
+            value: "true"
+          - name: SPAWN-NPCS
+            value: "true"
+          - name: SPAWN-PROTECTION
+            value: "16"
+          - name: ACCEPT_EULA
+            value: "true"
+          - name: MINECRAFT_VERSION
+            value: "1.13.2"
+          imagePullPolicy: Never
+          lifecycle: {}
+          # livenessProbe:
+          #   tcpSocket:
+          #     port: 25565
+          #   initialDelaySeconds: 300
+          #   periodSeconds: 10
+          ports:
+          - containerPort: 25565
+            name: minecraft
+          resources:
+            limits:
+              memory: 3Gi
+            requests:
+              memory: 1Gi
+          # readinessProbe:
+          #   tcpSocket:
+          #     port: 25565
+          #   initialDelaySeconds: 300
+          #   periodSeconds: 10
+          volumeMounts:
+          - name: minecraft-data
+            mountPath: /data       
+        - name: consul
+          image: "consul:1.2.1"
+          args:
+          - agent
+          - '-advertise=$(POD_IP)'
+          - '-bind=0.0.0.0'
+          - '-retry-join=$(CONSUL_CLUSTER)'
+          - '-disable-host-node-id'
+          - '-datacenter=$(CONSUL_DC)'
+          env:
+          - name: CONSUL_CLUSTER
+            value: consul.service.consul
+          - name: POD_IP
+            valueFrom:
+              fieldRef:
+                apiVersion: v1
+                fieldPath: status.podIP
+          - name: CONSUL_LOCAL_CONFIG
+            value: '{ "service": { "name": "minecraft", "port": 25565, "tags": [ "jacob" ] } }'
+          - name: CONSUL_DC
+            value: bresciani-dev
+          imagePullPolicy: Always
+          lifecycle:
+            preStop:
+              exec:
+                command:
+                - /bin/sh
+                - -c
+                - consul leave
+          ports:
+          - containerPort: 8300
+            name: server
+          - containerPort: 8301
+            name: serflan
+          - containerPort: 8302
+            name: serfwan
+          - containerPort: 8400
+            name: alt-port
+          - containerPort: 8500
+            name: ui-port
+          - containerPort: 8600
+            name: dns
+          resources:
+            limits:
+              memory: 256Mi
+            requests:
+              memory: 128Mi
+      volumes:
+      - name: minecraft-data
+        hostPath:
+          path: /var/k8s/disk

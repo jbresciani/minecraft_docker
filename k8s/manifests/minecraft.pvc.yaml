@@ -1,0 +1,20 @@
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: minecraft-data
+  namespace: minecraft-jacob
+  labels:
+    app: minecraft
+    clusterid: jacob  
+spec:
+  accessModes:
+    - ReadWriteOnce
+  volumeMode: Filesystem
+  resources:
+    requests:
+      storage: 1Gi
+  selector:
+    matchLabels:
+      app: minecraft
+      clusterid: jacob
