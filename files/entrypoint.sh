@@ -8,9 +8,6 @@ if [ ! -f "${MINECRAFT_LOGS}" ]; then
   mkdir -p "${MINECRAFT_LOGS}"
 fi
 
-/usr/local/bin/get_mc_url.py
-md5sum "${MINECRAFT_HOME}/minecraft_server.jar"
-
 if [ -z "${ALLOW-FLIGHT}" ]; then
   sed -i s/^allow-flight=.*/allow-flight=${ALLOW-FLIGHT}/g "${MINECRAFT_HOME}/server.properties"
 fi

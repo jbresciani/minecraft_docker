@@ -2,7 +2,7 @@
 FROM openjdk:jre
 
 LABEL MAINTAINER Jacob Bresciani \
-      VERSION: 1.0
+      VERSION: 1.0.1
 
 ARG MINECRAFT_VERSION=${MINECRAFT_VERSION}
 
@@ -43,11 +43,12 @@ RUN set -x; \
 
 USER minecraft
 
+VOLUME ${MINECRAFT_HOME}/world
+
 WORKDIR ${MINECRAFT_HOME}
 
 CMD ["/bin/sh"]
 
 ENTRYPOINT ["/entrypoint.sh"]
-
 
 EXPOSE 25565

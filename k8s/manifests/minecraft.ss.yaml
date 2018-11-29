@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
         - name: minecraft
-          image: minecraft-server:1
+          image: jbresciani/minecraft:1.13.2
           env:
           - name: ALLOW-FLIGHT
             value: "false"
@@ -64,15 +64,13 @@ spec:
             value: "16"
           - name: ACCEPT_EULA
             value: "true"
-          - name: MINECRAFT_VERSION
-            value: "1.13.2"
-          imagePullPolicy: Never
+          imagePullPolicy: Always
           lifecycle: {}
-          # livenessProbe:
-          #   tcpSocket:
-          #     port: 25565
-          #   initialDelaySeconds: 300
-          #   periodSeconds: 10
+          livenessProbe:
+            tcpSocket:
+              port: 25565
+            initialDelaySeconds: 90
+            periodSeconds: 10
           ports:
           - containerPort: 25565
             name: minecraft
@@ -81,14 +79,14 @@ spec:
               memory: 3Gi
             requests:
               memory: 1Gi
-          # readinessProbe:
-          #   tcpSocket:
-          #     port: 25565
-          #   initialDelaySeconds: 300
-          #   periodSeconds: 10
+          readinessProbe:
+            tcpSocket:
+              port: 25565
+            initialDelaySeconds: 90
+            periodSeconds: 10
           volumeMounts:
           - name: minecraft-data
-            mountPath: /data       
+            mountPath: /opt/minecraft/world
         - name: consul
           image: "consul:1.2.1"
           args:

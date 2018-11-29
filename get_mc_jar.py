@@ -2,7 +2,7 @@
 import requests
 import os
 
-#fetch the latest versions.json file
+# fetch the latest versions.json file
 url = "https://launchermeta.mojang.com/mc/game/version_manifest.json"
 response_versions = requests.get(url)
 response_versions.raise_for_status()
