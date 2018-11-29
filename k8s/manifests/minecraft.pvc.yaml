@@ -2,7 +2,7 @@
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: minecraft-data
+  name: minecraft-jacob
   namespace: minecraft-jacob
   labels:
     app: minecraft

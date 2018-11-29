@@ -137,4 +137,4 @@ spec:
       volumes:
       - name: minecraft-data
         hostPath:
-          path: /var/k8s/disk
+          path: /var/k8s/disk/minecraft-jacob
