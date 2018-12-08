@@ -8,8 +8,8 @@ if [ ! -f "${MINECRAFT_LOGS}" ]; then
   mkdir -p "${MINECRAFT_LOGS}"
 fi
 
-if [ -z "${ALLOW-FLIGHT}" ]; then
-  sed -i s/^allow-flight=.*/allow-flight=${ALLOW-FLIGHT}/g "${MINECRAFT_HOME}/server.properties"
+if [ -z "${ALLOW_FLIGHT}" ]; then
+  sed -i s/^allow-flight=.*/allow-flight=${ALLOW_FLIGHT}/g "${MINECRAFT_HOME}/server.properties"
 fi
 
 if [ -z "${DIFFICULTY}" ]; then
@@ -28,16 +28,16 @@ if [ -z "${GAMEMODE}" ]; then
 # 3 - Spectator
 fi
 
-if [ -z "${GENERATE-STRUCTURES}" ]; then
-  sed -i s/^generate-structures=.*/generate-structures=${GENERATE-STRUCTURES}/g "${MINECRAFT_HOME}/server.properties"
+if [ -z "${GENERATE_STRUCTURES}" ]; then
+  sed -i s/^generate-structures=.*/generate-structures=${GENERATE_STRUCTURES}/g "${MINECRAFT_HOME}/server.properties"
 fi
 
 if [ -z "${HARDCORE}" ]; then
   sed -i s/^hardcore=.*/hardcore=${HARDCORE}/g "${MINECRAFT_HOME}/server.properties"
 fi
 
-if [ -z "${LEVEL-TYPE}" ]; then
-  sed -i s/^level-type=.*/level-type=${LEVEL-TYPE}/g "${MINECRAFT_HOME}/server.properties"
+if [ -z "${LEVEL_TYPE}" ]; then
+  sed -i s/^level-type=.*/level-type=${LEVEL_TYPE}/g "${MINECRAFT_HOME}/server.properties"
 # DEFAULT - Standard world with hills, valleys, water, etc.
 # FLAT - A flat world with no features, can be modified with generator-settings.
 # LARGEBIOMES - Same as default but all biomes are larger.
@@ -45,12 +45,12 @@ if [ -z "${LEVEL-TYPE}" ]; then
 # BUFFET - Same as default unless generator-settings is set to a preset.
 fi
 
-if [ -z "${LEVEL-SEED}" ]; then
-  sed -i s/^level-seed=.*/level-seed=${LEVEL-SEED}/g "${MINECRAFT_HOME}/server.properties"
+if [ -z "${LEVEL_SEED}" ]; then
+  sed -i s/^level-seed=.*/level-seed=${LEVEL_SEED}/g "${MINECRAFT_HOME}/server.properties"
 fi
 
-if [ -z "${MAX-PLAYERS}" ]; then
-  sed -i s/^max-players=.*/max-players=${MAX-PLAYERS}/g "${MINECRAFT_HOME}/server.properties"
+if [ -z "${MAX_PLAYERS}" ]; then
+  sed -i s/^max-players=.*/max-players=${MAX_PLAYERS}/g "${MINECRAFT_HOME}/server.properties"
 fi
 
 if [ -z "${MOTD}" ]; then
@@ -61,20 +61,20 @@ if [ -z "${PVP}" ]; then
   sed -i s/^pvp=.*/pvp=${PVP}/g "${MINECRAFT_HOME}/server.properties"
 fi
 
-if [ -z "${SPAWN-ANIMALS}" ]; then
-  sed -i s/^spawn-animals=.*/spawn-animals=${SPAWN-ANIMALS}/g "${MINECRAFT_HOME}/server.properties"
+if [ -z "${SPAWN_ANIMALS}" ]; then
+  sed -i s/^spawn-animals=.*/spawn-animals=${SPAWN_ANIMALS}/g "${MINECRAFT_HOME}/server.properties"
 fi
 
-if [ -z "${SPAWN-MONSTERS}" ]; then
-  sed -i s/^spawn-monsters=.*/spawn-monsters=${SPAWN-MONSTERS}/g "${MINECRAFT_HOME}/server.properties"
+if [ -z "${SPAWN_MONSTERS}" ]; then
+  sed -i s/^spawn-monsters=.*/spawn-monsters=${SPAWN_MONSTERS}/g "${MINECRAFT_HOME}/server.properties"
 fi
 
-if [ -z "${SPAWN-NPCS}" ]; then
-  sed -i s/^spawn-npcs=.*/spawn-npcs=${SPAWN-NPCS}/g "${MINECRAFT_HOME}/server.properties"
+if [ -z "${SPAWN_NPCS}" ]; then
+  sed -i s/^spawn-npcs=.*/spawn-npcs=${SPAWN_NPCS}/g "${MINECRAFT_HOME}/server.properties"
 fi
 
-if [ -z "${SPAWN-PROTECTION}" ]; then
-  sed -i s/^spawn-protection=.*/spawn-protection=${SPAWN-PROTECTION}/g "${MINECRAFT_HOME}/server.properties"
+if [ -z "${SPAWN_PROTECTION}" ]; then
+  sed -i s/^spawn-protection=.*/spawn-protection=${SPAWN_PROTECTION}/g "${MINECRAFT_HOME}/server.properties"
 fi
 
 echo eula=${ACCEPT_EULA} > ${MINECRAFT_HOME}/eula.txt

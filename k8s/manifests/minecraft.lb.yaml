@@ -1,5 +1,10 @@
 ---
 apiVersion: v1
+kind: Namespace
+metadata:
+  name: minecraft-jacob
+---
+apiVersion: v1
 kind: Service
 metadata:
   name: minecraft
@@ -17,7 +22,3 @@ spec:
   selector:
     app: minecraft
     clusterid: jacob
-status:
-  loadBalancer:
-    ingress:
-    - ip: 192.168.0.230
