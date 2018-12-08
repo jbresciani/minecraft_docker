@@ -2,7 +2,7 @@
 FROM openjdk:jre
 
 LABEL MAINTAINER Jacob Bresciani \
-      VERSION: 1.0.1
+      VERSION: 1.0.2
 
 ARG MINECRAFT_VERSION=${MINECRAFT_VERSION}
 
@@ -11,26 +11,25 @@ ENV ACCEPT_EULA=false \
     JAVA_OPTS="-Xmx2048m -Xms512m" \
     LANG=C.UTF-8 \
     MINECRAFT_HOME=/opt/minecraft \
-    MINECRAFT_LOGS=/opt/minecraft/logs \
+    MINECRAFT_LOGS="${MINECRAFT_HOME}/logs" \
     MINECRAFT_VERSION="${MINECRAFT_VERSION}" \
     PATH=$PATH:/usr/lib/jvm/java-1.8-openjdk/jre/bin:/usr/lib/jvm/java-1.8-openjdk/bin \
-    ALLOW-FLIGHT=false \
+    ALLOW_FLIGHT=false \
     DIFFICULTY=1 \
     GAMEMODE=0 \
-    GENERATE-STRUCTURES=true \
+    GENERATE_STRUCTURES=true \
     HARDCORE=false \
-    LEVEL-SEED= \
-    LEVEL-TYPE=DEFAULT \
-    MAX-PLAYERS=20 \
-    MOTD="A Minecraft Server" \
+    LEVEL_SEED= \
+    LEVEL_TYPE=DEFAULT \
+    MAX_PLAYERS=20 \
+    MOTD="A Minecraft Server in a Docker Container" \
     PVP=true \
-    SPAWN-ANIMALS=true \
-    SPAWN-MONSTERS=true \
-    SPAWN-NPCS=true \
-    SPAWN-PROTECTION=16
+    SPAWN_ANIMALS=true \
+    SPAWN_MONSTERS=true \
+    SPAWN_NPCS=true \
+    SPAWN_PROTECTION=16
 
 COPY files/entrypoint.sh /
-COPY files/minecraft_server.jar /opt/minecraft/minecraft_server.jar
 
 RUN set -x; \
     chmod +x /entrypoint.sh; \
@@ -46,6 +45,9 @@ USER minecraft
 VOLUME ${MINECRAFT_HOME}/world
 
 WORKDIR ${MINECRAFT_HOME}
+
+COPY files/minecraft_server.jar minecraft_server.jar
+COPY files/server.properties server.properties
 
 CMD ["/bin/sh"]
 

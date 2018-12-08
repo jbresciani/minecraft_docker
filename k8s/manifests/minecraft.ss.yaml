@@ -1,4 +1,9 @@
 ---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: minecraft-jacob
+---
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
@@ -39,7 +44,7 @@ spec:
             value: "true"
           - name: HARDCORE
             value: "false"
-          # - name: LEVEL-SEED
+          # - name: LEVEL_SEED
           #   value: 
           - name: LEVEL-TYPE
             value: DEFAULT
@@ -87,53 +92,6 @@ spec:
           volumeMounts:
           - name: minecraft-data
             mountPath: /opt/minecraft/world
-        - name: consul
-          image: "consul:1.2.1"
-          args:
-          - agent
-          - '-advertise=$(POD_IP)'
-          - '-bind=0.0.0.0'
-          - '-retry-join=$(CONSUL_CLUSTER)'
-          - '-disable-host-node-id'
-          - '-datacenter=$(CONSUL_DC)'
-          env:
-          - name: CONSUL_CLUSTER
-            value: consul.service.consul
-          - name: POD_IP
-            valueFrom:
-              fieldRef:
-                apiVersion: v1
-                fieldPath: status.podIP
-          - name: CONSUL_LOCAL_CONFIG
-            value: '{ "service": { "name": "minecraft", "port": 25565, "tags": [ "jacob" ] } }'
-          - name: CONSUL_DC
-            value: bresciani-dev
-          imagePullPolicy: Always
-          lifecycle:
-            preStop:
-              exec:
-                command:
-                - /bin/sh
-                - -c
-                - consul leave
-          ports:
-          - containerPort: 8300
-            name: server
-          - containerPort: 8301
-            name: serflan
-          - containerPort: 8302
-            name: serfwan
-          - containerPort: 8400
-            name: alt-port
-          - containerPort: 8500
-            name: ui-port
-          - containerPort: 8600
-            name: dns
-          resources:
-            limits:
-              memory: 256Mi
-            requests:
-              memory: 128Mi
       volumes:
       - name: minecraft-data
         hostPath:
