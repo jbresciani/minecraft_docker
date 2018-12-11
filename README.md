@@ -44,18 +44,18 @@ JAVA_OPTS="-Xmx2048m -Xms512m"
 
 To control their corresponding server.properties values, the following can be adjusted:
 ```
-ALLOW-FLIGHT=false
+ALLOW_FLIGHT=false
 DIFFICULTY=1
 GAMEMODE=0
 GENERATE-STRUCTURES=true
 HARDCORE=false
-LEVEL-SEED=
-LEVEL-TYPE=DEFAULT
+LEVEL_SEED=
+LEVEL_TYPE=DEFAULT
 MAX-PLAYERS=20
 MOTD="A Minecraft Server"
 PVP=true
-SPAWN-ANIMALS=true
-SPAWN-MONSTERS=true
-SPAWN-NPCS=true
-SPAWN-PROTECTION=16
+SPAWN_ANIMALS=true
+SPAWN_MONSTERS=true
+SPAWN_NPCS=true
+SPAWN_PROTECTION=16
 ```
