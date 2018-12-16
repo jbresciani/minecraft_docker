@@ -11,7 +11,6 @@ ENV ACCEPT_EULA=false \
     JAVA_OPTS="-Xmx2048m -Xms512m" \
     LANG=C.UTF-8 \
     MINECRAFT_HOME=/opt/minecraft \
-    MINECRAFT_LOGS="${MINECRAFT_HOME}/logs" \
     MINECRAFT_VERSION="${MINECRAFT_VERSION}" \
     PATH=$PATH:/usr/lib/jvm/java-1.8-openjdk/jre/bin:/usr/lib/jvm/java-1.8-openjdk/bin \
     ALLOW_FLIGHT=false \
@@ -33,12 +32,12 @@ COPY files/entrypoint.sh /
 
 RUN set -x; \
     chmod +x /entrypoint.sh; \
-    adduser --home ${MINECRAFT_HOME} \
+    adduser --home "${MINECRAFT_HOME}" \
             --shell /bin/sh \
             --disabled-password \
             -c "Minecraft Server User" \
             minecraft; \
-    chown -R minecraft ${MINECRAFT_HOME}
+    chown -R minecraft "${MINECRAFT_HOME}"
 
 USER minecraft
 

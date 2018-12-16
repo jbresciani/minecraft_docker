@@ -26,6 +26,8 @@ spec:
         - name: minecraft
           image: jbresciani/minecraft:1.13.2
           env:
+          - name: JAVA_OPTS
+            value: "-Xmx2048m -Xms512m"
           - name: ALLOW_FLIGHT
             value: "false"
           - name: DIFFICULTY
