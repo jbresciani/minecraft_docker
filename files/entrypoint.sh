@@ -73,6 +73,10 @@ if [ ! -z "${SPAWN_PROTECTION}" ]; then
   sed -i "s/^spawn-protection=.*/spawn-protection=${SPAWN_PROTECTION}/g" "${MINECRAFT_HOME}/server.properties"
 fi
 
+if [ ! -z "${VIEW_DISTANCE}" ]; then
+  sed -i "s/^view-distance=.*/view-distance=${VIEW_DISTANCE}/g" "${MINECRAFT_HOME}/server.properties"
+fi
+
 echo eula=${ACCEPT_EULA} > ${MINECRAFT_HOME}/eula.txt
 
 /usr/bin/java \
