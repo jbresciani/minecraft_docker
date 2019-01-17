@@ -1,3 +1,4 @@
 .vscode
 Pipfile.lock
 files/minecraft_server.jar
+files/server.properties

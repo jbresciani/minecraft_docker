@@ -22,19 +22,34 @@ while getopts "v:d" opts; do
 done
 
 if [[ "${MINECRAFT_VERSION}" == '1.'* ]]; then
-  secondary_tag="stable"
+  SECONDARY_TAG="stable"
 else
-  secondary_tag="beta"
+  SECONDARY_TAG="beta"
 fi
 
-MINECRAFT_VERSION=${MINECRAFT_VERSION} ./get_mc_jar.py
+cd files
+rm -f server.properties
+
+if [[ "${MINECRAFT_VERSION}" == '1.13'* ]]; then
+  echo "1.13"
+  ln -s 1.13.server.properties server.properties
+elif [[ "${MINECRAFT_VERSION}" == '1.14'* ]]; then
+  echo "1.14"
+  ln -s 1.14.server.properties server.properties
+else
+  echo "1.14"
+  ln -s 1.14.server.properties server.properties
+fi
+cd ../
+
+./get_mc_jar.py -v ${MINECRAFT_VERSION} 
 
 docker build . \
        --build-arg MINECRAFT_VERSION=${MINECRAFT_VERSION} \
        -t jbresciani/minecraft:${MINECRAFT_VERSION} \
-       -t jbresciani/minecraft:${secondary_tag} \
+       -t jbresciani/minecraft:${SECONDARY_TAG} \
 
 if [ "$DRY_RUN" -eq 0 ]; then
   docker push jbresciani/minecraft:${MINECRAFT_VERSION}
-  docker push jbresciani/minecraft:${secondary_tag}
+  docker push jbresciani/minecraft:${SECONDARY_TAG}
 fi
