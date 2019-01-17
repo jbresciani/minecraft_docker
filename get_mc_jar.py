@@ -1,8 +1,8 @@
 #!/usr/bin/env python
+import click
+import hashlib
 import requests
 import os
-import click
-
 
 @click.command()
 @click.option(
@@ -37,22 +37,32 @@ def main(version, directory):
     version_info = requests.get(version_info_url)
     version_info.raise_for_status()
 
+    expected_jar_sha1 = version_info.json()['downloads']['server']['sha1']
+    expected_jar_size = version_info.json()['downloads']['server']['size']
+
     server_jar_url = version_info.json()['downloads']['server']['url']
     print(f'downloading jar from {server_jar_url}')
 
     jar_download = requests.get(server_jar_url)
     jar_download.raise_for_status()
 
+    # test sha1
+    actual_jar_sha1 = hashlib.sha1(jar_download.content).hexdigest()
+    if actual_jar_sha1 ==   expected_jar_sha1:
+        print(f'SHA1 matches expected value({actual_jar_sha1})')
+    else:
+        raise Exception('sha1 mis-match! Expected %s, found %s' % (expected_jar_sha1, actual_jar_sha1))
+
+    # test size
+    actual_jar_size = len(jar_download.content)
+    if actual_jar_size == expected_jar_size:
+        print(f'Size matches expected value({actual_jar_size})')
+    else:
+        raise Exception('Size of the Jar did not match the expect value of %s. Actual size of jar %s' % (expected_jar_size, actual_jar_size))
+
     with open(f'{directory}/minecraft_server.jar', 'wb') as f:
         f.write(jar_download.content)
-
-    # TODO: should actually compare with the writen file...
-    server_jar_size = version_info.json()['downloads']['server']['size']
-    print(f'expected size of jar: {server_jar_size}')
-    # TODO: should actually compare with the writen file...
-    server_jar_sha1 = version_info.json()['downloads']['server']['sha1']
-    print(f'expected sha1: {server_jar_sha1}')
-
+    print(f'{directory}/minecraft_server.jar writen')
 
 if __name__ == '__main__':  # pragma: no cover
     main()
