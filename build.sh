@@ -47,7 +47,7 @@ cd ../
 docker build . \
        --build-arg MINECRAFT_VERSION=${MINECRAFT_VERSION} \
        -t jbresciani/minecraft:${MINECRAFT_VERSION} \
-       -t jbresciani/minecraft:${SECONDARY_TAG} \
+       -t jbresciani/minecraft:${SECONDARY_TAG}
 
 if [ "$DRY_RUN" -eq 0 ]; then
   docker push jbresciani/minecraft:${MINECRAFT_VERSION}
