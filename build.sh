@@ -21,12 +21,6 @@ while getopts "v:d" opts; do
   esac
 done
 
-if [[ "${MINECRAFT_VERSION}" == '1.'* ]]; then
-  SECONDARY_TAG="stable"
-else
-  SECONDARY_TAG="beta"
-fi
-
 cd files
 rm -f server.properties
 
@@ -42,14 +36,13 @@ else
 fi
 cd ../
 
-./get_mc_jar.py -v ${MINECRAFT_VERSION} 
-
+./get_mc_jar.py -v "${MINECRAFT_VERSION}"
+echo version fetched
+TAG=$( echo ${MINECRAFT_VERSION// /.} | tr '[:upper:]' '[:lower:]')
 docker build . \
-       --build-arg MINECRAFT_VERSION=${MINECRAFT_VERSION} \
-       -t jbresciani/minecraft:${MINECRAFT_VERSION} \
-       -t jbresciani/minecraft:${SECONDARY_TAG}
+       --build-arg MINECRAFT_VERSION=${MINECRAFT_VERSION// /.} \
+       -t jbresciani/minecraft:${TAG}
 
 if [ "$DRY_RUN" -eq 0 ]; then
-  docker push jbresciani/minecraft:${MINECRAFT_VERSION}
-  docker push jbresciani/minecraft:${SECONDARY_TAG}
+  docker push jbresciani/minecraft:${TAG}
 fi
